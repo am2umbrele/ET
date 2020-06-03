@@ -1,22 +1,75 @@
-# Elevator Controls
+# ET
 
-## What is this?
-This is a code challenge to be able to get a feel for how candidates for employment write and organize code. This is not a test, though code should be functional.
+## Requirements
 
-## So, what am I expected to do?
+PHP 7.2 or greater
 
-The goal of this challenge is to code an elevator system. The expectation is to utilize PHP Object Oriented best practices to create a functional REST-ish API that can cause elevator cars to react to calls to different floors in an efficient manner. SlimPHP has been provided as a framework, and persistance layer, or additional libraries, are up to the digression of the developer.
 
-## What are the requirements?
+## Setup
 
- - Be able to configure the number of Elevator Cars via the `ELEVATOR_CAR_COUNT` environmental variable (.env)
- - Be able to configure the number of Elevator Cars via the `FLOOR_COUNT` environmental variable (.env)
+**Run the following command**
 
-## How should I do this?
+```
+git clone git@github.com:am2umbrele/ET.git
+```
+**Run**
+```
+composer install
+```
+Create tables
+```
+CREATE TABLE `elevators` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`floor` INT(11) NOT NULL,
+	`status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0 - idle, 1 - moving',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `floor` (`floor`) USING BTREE
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=3
+;
+CREATE TABLE `elevator_move_log` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`elevator_id` INT(11) NOT NULL,
+	`floor_from` INT(11) NOT NULL,
+	`floor_to` INT(11) NOT NULL,
+	`created` TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `elevator_id` (`elevator_id`) USING BTREE
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
 
-- Clone this repository to your local environment
-- Set up a new remote to add from repository service of choice (Gitlab, Github, Bitbucket, etc..)
-- Write tests
-- Write code
-- Test Code
-- When complete, Invite the hiring manager to a PR in the personal remote 
+```
+**Add your database info to `src\DB.php`** 
+```
+'hostname' => '',
+'username' => '',
+'password' => '',
+'database' => '',
+```
+**Change .env variables** 
+```
+ELEVATOR_CAR_COUNT=1
+FLOOR_COUNT=2
+baseUrl=''
+```
+## Send request to elevators
+Make a POST request to
+```
+yourBaseUrl/scan
+```
+with the raw json body ex:
+```
+{
+    "floors": [5, 3, 7, 4, 9, 11, -1]
+}
+```
+
+
+## Run tests
+```
+./vendor/bin/phpunit tests
+```

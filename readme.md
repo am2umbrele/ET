@@ -56,6 +56,7 @@ ELEVATOR_CAR_COUNT=1
 FLOOR_COUNT=2
 baseUrl=''
 ```
+### Algorithm used for this project: https://www.geeksforgeeks.org/scan-elevator-disk-scheduling-algorithms/
 ## Send request to elevators
 Make a POST request to
 ```
